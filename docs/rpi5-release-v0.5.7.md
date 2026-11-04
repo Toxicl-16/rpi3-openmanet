@@ -31,10 +31,8 @@ reintroduced.
 - Full `make -j16 V=sc` build — pass.
 - Image inspection — pass: v0.5.2-compatible command line, no brcmfmac files,
   MM8108 firmware present, BATMAN packages present, and no ext4 release image.
-- Factory image SHA-256:
-  `a1c65f5cf76821f36eba68e9161897d099afac0020fabfebd508083a8bfd0af8`
-- Sysupgrade image SHA-256:
-  `2420e1332d629d0b92081cfc8f58f28e36a3a6dc8591d819a7a578f1d7ce896c`
+- The generated `sha256sums` asset is the authoritative checksum list for the
+  release artifacts.
 
 The build host cannot verify physical Pi 5 boot, Ethernet negotiation, MM8108
 USB enumeration, real SD-card partition growth, or mesh traffic. Those checks
