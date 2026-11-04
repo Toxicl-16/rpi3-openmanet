@@ -41,9 +41,6 @@ CONFIG_PACKAGE_cypress-firmware-43455-sdio=y
 CONFIG_PACKAGE_brcmfmac-nvram-43455-sdio=y
 CONFIG_PACKAGE_wpad-basic-mbedtls=y
 
-# --- Panda Wireless / Ralink RT5370 USB dongle (rt2800usb) ---
-CONFIG_PACKAGE_kmod-rt2800-usb=y
-
 # --- mDNS responder (required by the Morse LuCI wizard for device discovery) ---
 CONFIG_PACKAGE_umdns=y
 
@@ -108,64 +105,13 @@ CONFIG_PACKAGE_luci-theme-openmanetargon=y
 # CONFIG_PACKAGE_luci-theme-morse is not set
 # CONFIG_PACKAGE_luci-theme-morseargon is not set
 
-# --- USB serial (LoRa / MCU sidecar boards) ---
-CONFIG_PACKAGE_kmod-usb-acm=y
-CONFIG_PACKAGE_kmod-usb-serial=y
-CONFIG_PACKAGE_kmod-usb-serial-cp210x=y
-CONFIG_PACKAGE_kmod-usb-serial-ch341=y
-CONFIG_PACKAGE_kmod-usb-serial-ftdi=y
-
-# --- Additional USB Wi-Fi dongle drivers ---
-# kmod-rt2800-usb already enabled above (Panda RT5370)
-# kmod-mt76x0u disabled: mt76 src (2024-04-03) is incompatible with kernel
-# 6.6.133 + this backports vintage (nla_policy + set_tim signature mismatch).
-# Re-enable after bumping mt76 to a 6.6-compatible snapshot, or after the
-# Morse mac80211 patch backport pass is done.
-# CONFIG_PACKAGE_kmod-mt76x0u=y
-# Note: kmod-rtl8821cu (Realtek 0bda:0811) is out-of-tree, not in OpenWrt feeds.
-# To add later: include a 3rd-party feed (e.g. morrownr/8821cu) and select here.
-
-# --- Network debugging ---
-CONFIG_PACKAGE_tcpdump=y
-CONFIG_PACKAGE_iperf3=y
-CONFIG_PACKAGE_mtr-nojson=y
-CONFIG_PACKAGE_nmap=y
-
-# --- General utilities ---
-CONFIG_PACKAGE_ca-certificates=y
-CONFIG_PACKAGE_ca-bundle=y
-CONFIG_PACKAGE_curl=y
-CONFIG_PACKAGE_bash=y
-CONFIG_PACKAGE_nano=y
-CONFIG_PACKAGE_htop=y
-CONFIG_PACKAGE_screen=y
-
-# --- VPN / mesh-VPN ---
-# WireGuard (kernel module + userspace tools + LuCI proto integration)
-CONFIG_PACKAGE_kmod-wireguard=y
-CONFIG_PACKAGE_wireguard-tools=y
-CONFIG_PACKAGE_luci-proto-wireguard=y
-# Tailscale (Go binary, ~30 MB; works with stock Tailscale or a self-hosted Headscale)
-CONFIG_PACKAGE_tailscale=y
-
-# --- OpenMANET manager and configuration theme additions ---
-CONFIG_PACKAGE_alfred=y
-CONFIG_PACKAGE_alsa-lib=y
-CONFIG_PACKAGE_hidapi=y
-CONFIG_PACKAGE_kmod-usb-audio=y
-CONFIG_PACKAGE_libevdev=y
-CONFIG_PACKAGE_libopus=y
-CONFIG_PACKAGE_libopusfile=y
-CONFIG_PACKAGE_libpam=y
+# --- OpenMANET manager and configuration theme ---
+# openmanetd's package dependencies pull in Alfred, BATMAN, audio, and the
+# runtime libraries it needs. Keep only the application requested here.
 CONFIG_PACKAGE_openmanetd=y
 
 # --- OpenTAKServer deployment ---
-# The firmware ships the ARM64 deployment definition and procd service. The
-# container images are pulled by Docker on first start unless an optional
-# offline bundle is supplied at build time.
-CONFIG_PACKAGE_docker=y
-CONFIG_PACKAGE_dockerd=y
-CONFIG_PACKAGE_containerd=y
-CONFIG_PACKAGE_runc=y
-CONFIG_PACKAGE_docker-compose=y
+# The firmware ships the ARM64 deployment definition and procd service; its
+# package dependencies select Docker and the required TLS/HTTP tools. Images
+# are pulled by Docker on first start.
 CONFIG_PACKAGE_opentakserver=y

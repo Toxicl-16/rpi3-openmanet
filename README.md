@@ -65,26 +65,25 @@ The original goal is the Seeed Studio HaLow HAT on Pi 5 over SPI — that path i
 | Device                          | Chip          | Interface | Status         |
 |---------------------------------|---------------|-----------|----------------|
 | Pi 5 onboard Wi-Fi              | BCM43455      | SDIO      | Included       |
-| Panda Wireless USB dongle       | Ralink RT5370 | USB       | Included       |
+| Panda Wireless USB dongle       | Ralink RT5370 | USB       | Optional       |
 
-Drivers and firmware for both are in the build (`kmod-brcmfmac` + `cypress-firmware-43455-sdio` for onboard, `kmod-rt2800-usb` for the dongle). Configure them at runtime via LuCI or `/etc/config/wireless`.
+The Pi 5 onboard driver and firmware are included (`kmod-brcmfmac` +
+`cypress-firmware-43455-sdio`). The optional Panda dongle driver is not part of
+the active vanilla Pi 5 profile.
 
 ## Included Add-Ons
 
-Beyond the base Morse HaLow stack, this build ships a curated set of extras ready to use out of the box:
+The active Pi 5 profile is intentionally small. It adds only the components
+needed for an OpenMANET node on top of the Build with Parallel Morse firmware:
 
-- **Mesh networking** — `batman-adv` + `batctl` Layer-2 mesh with LuCI integration, plus `mesh11sd` for 802.11s
-- **VPN** — WireGuard (kernel module + LuCI proto) and Tailscale client/daemon (compatible with Headscale for off-grid use)
-- **LoRa / Reticulum sidecar** — Python 3 with `pyserial` and `netifaces`; USB-ACM and USB-serial drivers for:
-  - Heltec V1 (nRF52) / V4 (ESP32-S3)
-  - RAK4631 (nRF52840)
-  - Seeed Xiao ESP32-S3
-  - Walter (ESP32-S3)
-  - Muzi Works Base Duo
-  - Null Hop Mesh Toad (CH341)
-- **Network debugging** — `tcpdump`, `iperf3`, `mtr`, `nmap`, full `iw`, `lsusb`
-- **Web UI** — LuCI with Morse Argon theme, first-boot setup wizard, WireGuard and batman-adv config UIs
-- **General utilities** — Bash, `curl` (TLS + CA bundle), `nano`, `htop`, `screen`, mDNS (`umdns`)
+- **OpenMANET** — `openmanetd`, Alfred, BATMAN-adv, 802.11s support, and the OpenMANET Argon LuCI configuration theme
+- **OpenTAKServer** — Docker, Compose, containerd, runc, and the OpenTAKServer deployment service/configuration
+- **Morse configuration** — the stock Morse LuCI configuration/wizard applications and MM8108 firmware
+- **Pi 5 networking** — onboard BCM43455 Wi-Fi firmware and the standard OpenWrt network/LuCI base
+
+PiAware, dump1090, RTL-SDR, Tailscale, LoRa/Reticulum Python packages, sidecar
+USB-serial drivers, and the other optional Build with Parallel feature bundles
+are not selected in this profile.
 
 ## Building
 

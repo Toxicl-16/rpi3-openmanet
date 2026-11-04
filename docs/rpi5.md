@@ -6,7 +6,8 @@ This is the active firmware target in this repository.
 
 - Raspberry Pi 5 or Raspberry Pi 500
 - Morse Micro MM8108 USB module, including Gateworks MM8108 hardware
-- Optional Pi 5 onboard Wi-Fi and USB Wi-Fi adapters
+- Pi 5 onboard Wi-Fi (included); other Wi-Fi adapters are optional and not part
+  of the vanilla profile
 
 The kernel, device tree, Morse driver, and MM8108 firmware come from the Build with Parallel Pi 5 OpenWrt tree and its pinned Morse feed. No unrelated Pi driver changes are required for the MM8108 USB path.
 
@@ -20,6 +21,9 @@ The profile is `boards/ekh-bcm2712/target_diffconfig` and produces images in `bi
 - OpenMANET Argon LuCI configuration theme
 - Docker, Compose, containerd, and runc
 - OpenTAKServer's OpenWrt deployment package
+
+The profile deliberately does not select Build with Parallel's optional
+PiAware/ADS-B, VPN, LoRa/Reticulum, diagnostics, or sidecar-driver bundles.
 
 The image uses a 64 MB boot partition and a 4 GB SquashFS/rootfs partition. OpenTAKServer data and Docker layers live on the writable overlay. The image does not include PiAware, dump1090, or the unrelated ADS-B web service; port 8080 is not reserved by this build.
 
