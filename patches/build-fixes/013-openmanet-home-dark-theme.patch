@@ -1,0 +1,76 @@
+diff --git a/feeds/morse/luci/luci-mod-home/htdocs/luci-static/resources/view/home/css/custom.css b/feeds/morse/luci/luci-mod-home/htdocs/luci-static/resources/view/home/css/custom.css
+index ae1cdbc..23c81b6 100644
+--- a/feeds/morse/luci/luci-mod-home/htdocs/luci-static/resources/view/home/css/custom.css
++++ b/feeds/morse/luci/luci-mod-home/htdocs/luci-static/resources/view/home/css/custom.css
+@@ -1,7 +1,12 @@
+ :root {
+ 	--max-content-width: 1250px;
+-	--box-shadow: #e0e2e4;
+-	--box-shadow-highlight: #a0a2a4;
++	--box-shadow: #111111;
++	--box-shadow-highlight: #5e72e4;
++	--home-surface: #2d2d2d;
++	--home-surface-raised: #252526;
++	--home-border: #555555;
++	--home-text: #cccccc;
++	--home-muted-text: #adb5bd;
+ }
+ 
+ /* Settings icon for config link.
+@@ -49,7 +54,9 @@
+ 	min-height: 340px;
+ 	text-decoration: none;
+ 	color: inherit;
+-	background-color: var(--background-color-high);
++	background-color: var(--home-surface);
++	color: var(--home-text);
++	border: 1px solid var(--home-border);
+ 	border-radius: 0.25rem;
+ 	box-shadow: 0 0 1rem 0 var(--box-shadow);
+ 	transition: box-shadow  0.3s ease-in-out;
+@@ -72,7 +79,8 @@
+ 
+ 	h1, h2, h3, h4, h5 {
+ 		color: inherit;
+-		background-color: var(--background-color-high);
++		background-color: var(--home-surface-raised);
++		color: var(--home-text);
+ 	}
+ 
+ 	h1, h2, h3, h4 {
+@@ -113,7 +121,8 @@
+ 			}
+ 
+ 			> dl {
+-				border: 2px dotted lightgrey;
++				border: 2px dotted var(--home-border);
++				background-color: var(--home-surface-raised);
+ 				padding: 0.7rem;
+ 				gap: 0.8rem;
+ 			}
+@@ -201,7 +210,7 @@
+ 	}
+ 
+ 	.devices-box {
+-		border: 2px dotted lightgray;
++		border: 2px dotted var(--home-border);
+ 		border-radius: 5px;
+ 	}
+ }
+@@ -300,7 +309,7 @@
+ 	div.graphcontainer > svg div.node {
+ 		border: 2px dotted black;
+ 		border-radius: 10px;
+-		background: var(--background-color-high);
++		background: var(--home-surface-raised);
+ 		display: flex;
+ 		align-items: center;
+ 	}
+@@ -319,7 +328,7 @@
+ 
+ 	div.graphcontainer > svg div.node-disabled {
+ 		border-color: grey;
+-		background: #F4F4F4;
++		background: var(--home-surface);
+ 	}
+ }

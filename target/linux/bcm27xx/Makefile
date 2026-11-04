@@ -20,6 +20,14 @@ endef
 
 include $(INCLUDE_DIR)/target.mk
 
+# OpenWrt's generated TARGET_ARCH_PACKAGES default is derived from CPU_TYPE.
+# Pi 5 uses a Cortex-A76 compiler target, but the available 23.05 release
+# packages use the compatible generic Cortex-A72 userspace ABI. Keep the
+# generated target metadata and the build variable aligned with that feed.
+ifeq ($(SUBTARGET),bcm2712)
+ARCH_PACKAGES:=aarch64_cortex-a72
+endif
+
 DEFAULT_PACKAGES := $(filter-out urngd,$(DEFAULT_PACKAGES))
 DEFAULT_PACKAGES += \
 	bcm27xx-gpu-fw \

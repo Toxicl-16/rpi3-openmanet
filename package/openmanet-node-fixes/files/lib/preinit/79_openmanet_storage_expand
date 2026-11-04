@@ -1,0 +1,128 @@
+#!/bin/sh
+
+# This hook is loaded immediately before OpenWrt's 80_mount_root hook. The
+# root partition and F2FS loop are therefore not mounted yet; resizing here is
+# safe and avoids the failed mounted-overlay resize seen on the field device.
+# The SquashFS superblock supplies the F2FS offset instead of a hardcoded value.
+
+storage_log() {
+	echo "openmanet-storage: $*" >/dev/console
+	logger -t openmanet-storage "$*" 2>/dev/null || true
+}
+
+[ "${OPENMANET_STORAGE_EXPAND:-1}" = 0 ] && exit 0
+grep -q 'openmanet_no_storage_expand' /proc/cmdline 2>/dev/null && exit 0
+
+rootdev="$(readlink -f /dev/root 2>/dev/null || true)"
+case "$rootdev" in
+	/dev/*) ;;
+	*)
+		for arg in $(cat /proc/cmdline); do
+			case "$arg" in root=/*) rootdev="${arg#root=}" ;; esac
+		done
+		rootdev="$(readlink -f "$rootdev" 2>/dev/null || true)"
+		;;
+esac
+[ -b "$rootdev" ] || {
+	storage_log 'root block device not available; skipping SD expansion'
+	exit 0
+}
+
+rootname="${rootdev##*/}"
+partno="$(cat "/sys/class/block/${rootname}/partition" 2>/dev/null || true)"
+[ -n "$partno" ] || {
+	storage_log "$rootdev is not a partition; skipping SD expansion"
+	exit 0
+}
+
+sysdev="$(readlink -f "/sys/class/block/${rootname}" 2>/dev/null || true)"
+diskname="$(basename "$(dirname "$sysdev")")"
+diskdev="/dev/${diskname}"
+[ -b "$diskdev" ] || {
+	storage_log "parent disk for $rootdev not found; skipping SD expansion"
+	exit 0
+}
+
+magic="$(dd if="$rootdev" bs=1 count=4 2>/dev/null | od -An -tx4 | tr -d ' \n')"
+[ "$magic" = 73717368 ] || {
+	storage_log "$rootdev is not a SquashFS root image; skipping F2FS expansion"
+	exit 0
+}
+squash_bytes="$(dd if="$rootdev" bs=1 skip=40 count=8 2>/dev/null | od -An -tu8 | tr -d ' \n')"
+case "$squash_bytes" in
+	''|*[!0-9]*) storage_log 'unable to read SquashFS size; skipping SD expansion'; exit 0 ;;
+esac
+offset=$(( (squash_bytes + 65535) / 65536 * 65536 ))
+
+mountpoint=/tmp/openmanet-storage-check
+mkdir -p "$mountpoint"
+
+cleanup_loop() {
+	[ -n "${loopdev:-}" ] || return 0
+	losetup -d "$loopdev" 2>/dev/null || true
+	loopdev=""
+}
+
+# Check the marker before touching the partition table. This mounts an
+# unmounted F2FS briefly, but avoids fsck/resize and partition work later.
+loopdev="$(losetup --find --show --offset "$offset" "$rootdev" 2>/dev/null || true)"
+if [ -n "$loopdev" ]; then
+	fstype="$(blkid -o value -s TYPE "$loopdev" 2>/dev/null || true)"
+	if [ "$fstype" = f2fs ] && mount -t f2fs -o ro "$loopdev" "$mountpoint" 2>/dev/null; then
+		if [ -f "$mountpoint/.openmanet-storage-expanded" ]; then
+			umount "$mountpoint" 2>/dev/null || true
+			cleanup_loop
+			storage_log 'F2FS overlay already expanded; no resize required'
+			exit 0
+		fi
+		umount "$mountpoint" 2>/dev/null || true
+	fi
+	cleanup_loop
+fi
+
+storage_log "extending $diskdev partition $partno to the card end"
+if ! parted -s "$diskdev" resizepart "$partno" 100% >/dev/null 2>&1; then
+	storage_log "partition resize failed for $diskdev; continuing without filesystem resize"
+	exit 0
+fi
+partprobe "$diskdev" >/dev/null 2>&1 || true
+blockdev --rereadpt "$diskdev" >/dev/null 2>&1 || true
+sleep 1
+
+loopdev="$(losetup --find --show --offset "$offset" "$rootdev" 2>/dev/null || true)"
+[ -n "$loopdev" ] || {
+	storage_log 'unable to create the F2FS loop device after partition resize'
+	exit 0
+}
+fstype="$(blkid -o value -s TYPE "$loopdev" 2>/dev/null || true)"
+if [ "$fstype" != f2fs ]; then
+	# Fresh images leave rootfs_data unformatted. mount_root formats it as F2FS
+	# using the now-expanded loop device.
+	cleanup_loop
+	storage_log 'overlay is not formatted yet; mount_root will create full-size F2FS'
+	exit 0
+fi
+
+# Repair an interrupted checkpoint before the offline resize. No mount exists
+# for this loop device at this point.
+if ! fsck.f2fs -f "$loopdev"; then
+	storage_log 'F2FS recovery failed; refusing to resize the filesystem'
+	cleanup_loop
+	exit 0
+fi
+if ! resize.f2fs "$loopdev"; then
+	storage_log 'F2FS resize failed; configuration and Docker data were left intact'
+	cleanup_loop
+	exit 0
+fi
+if ! mount -t f2fs "$loopdev" "$mountpoint"; then
+	storage_log 'resized F2FS could not be mounted for verification'
+	cleanup_loop
+	exit 0
+fi
+touch "$mountpoint/.openmanet-storage-expanded"
+sync
+umount "$mountpoint"
+cleanup_loop
+storage_log 'F2FS overlay expanded and verified before root mount'
+exit 0

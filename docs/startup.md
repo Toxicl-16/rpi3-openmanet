@@ -15,6 +15,12 @@ not use this Pi 5 startup profile.
 7. Choose **Mesh Gate** for the node connected to the Internet or upstream LAN. Choose **Mesh Point** for an extender node.
 8. Apply the wizard configuration and wait for the network services to restart.
 
+On the first boot from a factory image, the firmware expands the root
+partition and creates or resizes the F2FS writable overlay before normal
+startup. The first boot can take longer on a large SD card; do not remove
+power during that operation. A sysupgrade keeps the existing `/overlay`,
+Docker data, and OpenTAKServer data.
+
 For a Mesh Gate, select the upstream Ethernet interface. Use **Router** on a
 trusted upstream network. Use **Router with Firewall** when the Ethernet port
 connects directly to an untrusted Internet connection. The OpenMANET wizard
@@ -36,10 +42,16 @@ iw dev
 batctl n
 batctl o
 pgrep -af openmanetd
+cat /tmp/openmanet-health
 ```
 
 The HaLow radio should be present in `iw dev`, the mesh peer should appear in
 `batctl n`, and the BATMAN originator table should populate in `batctl o`.
+The health report separately identifies the BATMAN module, `bat0`, its hard
+interface, bridge membership, established peers, learned originators, Docker
+capability xattrs, and OpenTAKServer readiness. A peer/originator warning is
+expected before another mesh node has joined; storage, interface, and bridge
+failures require correction.
 
 ## MM8108 USB radio path workaround
 

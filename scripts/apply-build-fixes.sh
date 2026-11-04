@@ -19,6 +19,16 @@ apply_patch_once() {
 # Existing checkouts may still have the old feed recipe installed. Fresh
 # feed installs automatically prefer the in-tree package/lang/rust recipe.
 ./scripts/feeds uninstall rust
+# The OpenMANET feed pins BATMAN-adv 2025.4 and batctl 2025.4. Older
+# checkouts may still contain package/feeds/routing links from the removed
+# generic routing feed, so remove only those three conflicting links before
+# installing the OpenMANET implementations.
+for package in batman-adv batctl alfred; do
+    link="package/feeds/routing/$package"
+    [ -e "$link" ] || [ -L "$link" ] || continue
+    unlink "$link"
+done
+./scripts/feeds install -p openmanet batman-adv batctl alfred
 apply_patch_once patches/build-fixes/002-morse-backports-version.patch
 cp patches/build-fixes/003-morse-optional-spi-flag.patch \
     feeds/morse/essentials/morse_driver/patches/016-optional-spi-flag.patch
@@ -34,6 +44,8 @@ cp patches/build-fixes/010-perl-sdbm-gcc15.patch \
     feeds/packages/lang/perl/patches/1000-gcc15-sdbm.patch
 apply_patch_once patches/build-fixes/011-luci-runtime-lemon-prototypes.patch
 apply_patch_once patches/build-fixes/012-bash-host-gnu17.patch
+apply_patch_once patches/build-fixes/013-openmanet-home-dark-theme.patch
+apply_patch_once patches/build-fixes/014-dockerd-f2fs-vfs-config.patch
 # These unused prpl forks conflict with the 23.05 LuCI UPnP dependency graph.
 # The Pi 5 image uses firewall4 and does not select either fork.
 ./scripts/feeds uninstall miniupnpd-prpl miniupnpd2

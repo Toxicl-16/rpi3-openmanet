@@ -1,0 +1,12 @@
+#!/bin/sh /etc/rc.common
+
+START=12
+
+boot() {
+	start
+}
+
+start() {
+	[ -x /usr/sbin/openmanet-batman ] || return 0
+	/usr/sbin/openmanet-batman repair
+}
