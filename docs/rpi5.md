@@ -49,9 +49,6 @@ Pi is the Internet gateway. `openmanetd` is included in the image; the
 OpenTAKServer service starts after Docker is ready and pulls its ARM64
 application images unless an offline bundle is supplied.
 
-See the [startup checklist](startup.md) for the full gate/point setup,
-verification commands, MM8108 path workaround, and OpenTAKServer instructions.
-
 OpenTAKServer provides its web UI at `http://NODE_IP:8090`, API at
 `http://NODE_IP:8091`, plain TCP CoT at `NODE_IP:8088`, and TLS CoT at
 `NODE_IP:8089`. Use the TLS CoT endpoint for ATAK after the server's

@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
 ARCH:=aarch64
-ARCH_PACKAGES:=aarch64_cortex-a72
 SUBTARGET:=bcm2712
 BOARDNAME:=BCM2712 boards (64 bit)
 CPU_TYPE:=cortex-a76

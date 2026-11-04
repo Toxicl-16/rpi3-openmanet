@@ -1,4 +1,0 @@
-config openmanet_node 'main'
-	option enabled '1'
-	option repair_batman '1'
-	option health_check '1'

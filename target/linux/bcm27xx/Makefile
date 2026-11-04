@@ -20,12 +20,6 @@ endef
 
 include $(INCLUDE_DIR)/target.mk
 
-# The Pi 5 compiler target is Cortex-A76, but the available 23.05 release
-# repositories publish the compatible generic aarch64_cortex-a72 ABI.
-ifeq ($(SUBTARGET),bcm2712)
-ARCH_PACKAGES:=aarch64_cortex-a72
-endif
-
 DEFAULT_PACKAGES := $(filter-out urngd,$(DEFAULT_PACKAGES))
 DEFAULT_PACKAGES += \
 	bcm27xx-gpu-fw \

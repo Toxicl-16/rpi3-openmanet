@@ -89,10 +89,6 @@ are not selected in this profile.
 
 ## Building
 
-The current release work and source-level validation matrix are recorded in
-[the Pi 5 0.5.9 release notes](docs/rpi5-release-v0.5.9.md). The complete
-issue record that drove these fixes is [the Pi 5 firmware fixes document](docs/rpi5_firmware_fixes.md).
-
 The `v0.4.0-alpha` images were built on a Google Compute Engine VM running Ubuntu 22.04.5 LTS (`x86_64`), with 96 vCPUs, approximately 94 GiB of usable RAM, and a 500 GiB Extreme persistent disk for fast read/write operations during compilation. These are the tested build host specifications, not minimum requirements. `make -j$(nproc)` uses every available vCPU; reduce parallelism on machines with less RAM.
 
 For a visual walkthrough of the full process, including building the OpenWrt Morse Micro firmware from source, applying customization, and flashing the resulting image to an SD card, see the [build and flash video](https://youtu.be/2y5DjqLjSXw).
@@ -183,8 +179,7 @@ If you plug the node into a home router instead, your computer stays on `192.168
 Open LuCI and use **Wizards** in the top bar. Set a root password from the
 yellow banner first, then select **802.11s Mesh**. The wizard provides the
 upstream OpenMANET choices for Mesh Point or Mesh Gate, including the BATMAN
-gateway role and Ethernet uplink mode. See the complete [startup checklist](docs/startup.md)
-for verification commands, the MM8108 radio workaround, and OpenTAKServer setup.
+gateway role and Ethernet uplink mode.
 
 ## OpenTAKServer
 
