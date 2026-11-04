@@ -24,10 +24,10 @@ PiAware and dump1090 are not included.
 ## Validation
 
 - Source assertions and shell syntax checks — pass.
-- Full build — required before publication of the release artifact.
-- Image inspection must confirm the BCM43455 firmware/NVRAM and brcmfmac
-  modules are present, the MM8108 firmware is present, BATMAN/OpenTAKServer
-  packages are present, and no PiAware package is selected.
+- Full build — pass.
+- Image inspection — pass: BCM43455 firmware/NVRAM and brcmfmac modules,
+  MM8108 firmware, BATMAN/OpenTAKServer packages, and no PiAware package.
+- No ext4 release artifact was produced.
 
 The Intel build host cannot verify physical Pi 5 SDIO attachment, AP beaconing,
 Ethernet negotiation, MM8108 USB enumeration, real SD-card expansion, Docker
