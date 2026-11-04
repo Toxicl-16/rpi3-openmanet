@@ -200,7 +200,7 @@ The board diffconfig is what determines image contents. To add a package, append
 - **`mac80211` Morse subsys patches dropped.** The 10 Morse 999-* patches (S1G ECSA, IBSS bridge, mesh, NDP block ack, etc.) were authored against backports 6.1.110 and didn't apply against 6.12.61. Currently dropped — must be re-authored before HaLow protocol features fully work. Alpha builds bind without them.
 - **Pi 4 SPI overlay (`999-001-morse-spi-fix-spi-bcm2835-driver`) not ported.** Used a v5.3-era of_gpio API that doesn't exist in 6.6. Pi 4 HaLow over SPI will regress until re-authored against 6.6 spi-bcm2835.
 - **Morse USB radio PHY path wrong after boot.** OpenWrt's `wifi detect` generates a truncated sysfs path for the MM8108 USB radio (`axi/...` instead of `platform/axi/.../3-1:1.0`). This causes `netifd` to fail with `Phy not found` on every boot. `wifi detect` also creates duplicate radio entries (e.g. `radio2`) with the correct path while leaving the broken `radio0`. Workaround: rc.local script that fixes the path (see "First-boot setup" above). Proper fix: patch the Morse `wifi detect` script or OpenWrt's `mac80211.sh` to emit the full platform path for USB devices on Pi 5.
-- **No CI.** Builds happen on the maintainer's host. Reproduce with `boards/ekh-bcm2712/target_diffconfig` per the README.
+- **No CI.** Builds happen on the maintainer's host. Reproduce with `boards/ekh-bcm2712/target_diffconfig` per the README. The active Pi 5 profile deliberately excludes PiAware/dump1090; port 8080 must remain unused by the firmware.
 
 ## Resolved issues
 

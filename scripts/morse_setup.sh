@@ -212,11 +212,10 @@ if [ "${INITIALIZE}" ]; then
     patch_feeds_packages
     ./scripts/feeds update -i
     ./scripts/feeds install -p morse -a
-    # Install only the OpenMANET packages needed by openmanetd. The feed also
-    # carries Morse packages with names that intentionally overlap the pinned
-    # Morse feed above; installing the whole feed would make the selected
-    # Build with Parallel driver source non-deterministic.
-    ./scripts/feeds install -p openmanet openmanetd alfred
+    # Install only the OpenMANET manager. Its package metadata pulls in Alfred
+    # and the runtime libraries it needs; do not replace the bare Morse LuCI
+    # interface with an unrelated OpenMANET theme/metapackage.
+    ./scripts/feeds install -p openmanet openmanetd
     for feed in packages routing telephony luci prpl; do
         ./scripts/feeds install -p "$feed" -a
     done

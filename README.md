@@ -75,7 +75,6 @@ Beyond the base Morse HaLow stack, this build ships a curated set of extras read
 
 - **Mesh networking** — `batman-adv` + `batctl` Layer-2 mesh with LuCI integration, plus `mesh11sd` for 802.11s
 - **VPN** — WireGuard (kernel module + LuCI proto) and Tailscale client/daemon (compatible with Headscale for off-grid use)
-- **ADS-B aircraft tracking** — RTL-SDR library, `dump1090` decoder, and Python 3 with `cryptography` for `adsbcot` (Cursor-on-Target feed)
 - **LoRa / Reticulum sidecar** — Python 3 with `pyserial` and `netifaces`; USB-ACM and USB-serial drivers for:
   - Heltec V1 (nRF52) / V4 (ESP32-S3)
   - RAK4631 (nRF52840)
