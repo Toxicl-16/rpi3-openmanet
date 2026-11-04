@@ -33,12 +33,30 @@ CONFIG_TARGET_ROOTFS_PARTSIZE=4096
 CONFIG_PER_FEED_REPO=y
 CONFIG_PACKAGE_blkid=y
 CONFIG_PACKAGE_blockdev=y
+CONFIG_PACKAGE_libcap=y
+CONFIG_PACKAGE_libcap-bin=y
 CONFIG_PACKAGE_f2fs-tools=y
 CONFIG_PACKAGE_e2fsprogs=y
 CONFIG_PACKAGE_resize2fs=y
 CONFIG_PACKAGE_parted=y
 CONFIG_PACKAGE_losetup=y
 CONFIG_PACKAGE_openmanet-node-fixes=y
+
+# Docker/OpenTAKServer needs cgroup controllers and file capabilities. Keep
+# these explicit so a generic config refresh cannot silently remove them.
+CONFIG_KERNEL_CGROUPS=y
+CONFIG_KERNEL_CGROUP_DEVICE=y
+CONFIG_KERNEL_CGROUP_FREEZER=y
+CONFIG_KERNEL_CGROUP_PIDS=y
+CONFIG_KERNEL_CPUSETS=y
+CONFIG_KERNEL_CGROUP_CPUACCT=y
+CONFIG_KERNEL_RESOURCE_COUNTERS=y
+CONFIG_KERNEL_MEMCG=y
+CONFIG_KERNEL_MEMCG_KMEM=y
+CONFIG_KERNEL_CGROUP_SCHED=y
+CONFIG_KERNEL_FAIR_GROUP_SCHED=y
+CONFIG_KERNEL_CFS_BANDWIDTH=y
+CONFIG_DOCKER_OPTIONAL_FEATURES=y
 CONFIG_KERNEL_SECURITY=y
 CONFIG_KERNEL_F2FS_FS_SECURITY=y
 CONFIG_KERNEL_EXT4_FS_SECURITY=y
@@ -94,6 +112,14 @@ CONFIG_PACKAGE_iw-full=y
 # --- Morse bundle / scripts ---
 CONFIG_PACKAGE_morse-bundle=y
 CONFIG_PACKAGE_morse-mode=y
+
+# --- Pi 5 onboard 2.4/5 GHz Wi-Fi (BCM43455 via brcmfmac/SDIO) ---
+# This is the client-facing AP path that worked in v0.5.2. The Pi 5 NVRAM
+# aliases and vendor brcmfmac modules are fixed in-tree.
+CONFIG_PACKAGE_kmod-brcmfmac=y
+CONFIG_PACKAGE_cypress-firmware-43455-sdio=y
+CONFIG_PACKAGE_brcmfmac-nvram-43455-sdio=y
+CONFIG_PACKAGE_wpad-basic-mbedtls=y
 # Pi 5 EEPROM reader — provides persistent-vars-storage so wizard-config
 # is not silently dropped (Morse only ships the bcm2711 variant).
 CONFIG_PACKAGE_persistent-vars-storage-bcm2712=y
@@ -129,12 +155,8 @@ CONFIG_PACKAGE_luci-theme-openmanetargon=y
 # CONFIG_PACKAGE_luci-theme-morse is not set
 # CONFIG_PACKAGE_luci-theme-morseargon is not set
 
-# The active recovery image intentionally stops at the bare Morse/OpenMANET
-# BATMAN node. Docker, OpenMANETD, OpenTAKServer, onboard Broadcom Wi-Fi, and
-# their supporting packages are not part of this boot-validation profile.
-# CONFIG_PACKAGE_openmanetd is not set
-# CONFIG_PACKAGE_opentakserver is not set
-# CONFIG_PACKAGE_kmod-brcmfmac is not set
-# CONFIG_PACKAGE_cypress-firmware-43455-sdio is not set
-# CONFIG_PACKAGE_brcmfmac-nvram-43455-sdio is not set
-# CONFIG_PACKAGE_wpad-basic-mbedtls is not set
+# --- OpenMANET manager ---
+CONFIG_PACKAGE_openmanetd=y
+
+# --- OpenTAKServer deployment ---
+CONFIG_PACKAGE_opentakserver=y

@@ -11,7 +11,7 @@ define Package/openmanet-node-fixes
   SECTION:=net
   CATEGORY:=Network
   TITLE:=OpenMANET Pi 5 boot migrations and diagnostics
-  DEPENDS:=+parted +partx-utils +losetup +blkid +f2fsck +e2fsprogs +resize2fs +batctl
+  DEPENDS:=+parted +partx-utils +losetup +blkid +f2fsck +e2fsprogs +resize2fs +libcap-bin +batctl
   PKGARCH:=all
 endef
 

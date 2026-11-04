@@ -15,26 +15,33 @@ assert_contains() {
 }
 
 assert_contains "$board" 'CONFIG_PACKAGE_openmanet-node-fixes=y'
+assert_contains "$board" 'CONFIG_PACKAGE_openmanetd=y'
+assert_contains "$board" 'CONFIG_PACKAGE_opentakserver=y'
 assert_contains "$board" '# CONFIG_TARGET_ROOTFS_EXT4FS is not set'
 assert_contains "$board" 'CONFIG_TARGET_DEFAULT_LAN_IP_FROM_PREINIT=y'
 assert_contains "$repo/target/linux/bcm27xx/base-files/etc/board.d/02_network" 'raspberrypi,5-model-b)'
 assert_contains "$repo/target/linux/bcm27xx/base-files/lib/preinit/05_set_preinit_iface_brcm2708" 'raspberrypi,5-model-b |'
 assert_contains "$repo/target/linux/bcm27xx/base-files/etc/board.d/02_network" 'ipaddr "10.41.254.1"'
 assert_contains "$board" 'CONFIG_PACKAGE_batctl-default=y'
+assert_contains "$board" 'CONFIG_PACKAGE_libcap-bin=y'
 assert_contains "$board" 'CONFIG_PACKAGE_e2fsprogs=y'
 assert_contains "$board" 'CONFIG_PACKAGE_resize2fs=y'
+assert_contains "$board" 'CONFIG_KERNEL_CGROUPS=y'
+assert_contains "$board" 'CONFIG_KERNEL_MEMCG=y'
+assert_contains "$board" 'CONFIG_KERNEL_CGROUP_DEVICE=y'
 assert_contains "$board" 'CONFIG_KERNEL_F2FS_FS_SECURITY=y'
-assert_contains "$board" '# CONFIG_PACKAGE_openmanetd is not set'
-assert_contains "$board" '# CONFIG_PACKAGE_opentakserver is not set'
-assert_contains "$board" '# CONFIG_PACKAGE_kmod-brcmfmac is not set'
-assert_contains "$board" '# CONFIG_PACKAGE_cypress-firmware-43455-sdio is not set'
-assert_contains "$board" '# CONFIG_PACKAGE_brcmfmac-nvram-43455-sdio is not set'
+assert_contains "$board" 'CONFIG_PACKAGE_kmod-brcmfmac=y'
+assert_contains "$board" 'CONFIG_PACKAGE_cypress-firmware-43455-sdio=y'
+assert_contains "$board" 'CONFIG_PACKAGE_brcmfmac-nvram-43455-sdio=y'
+assert_contains "$board" 'CONFIG_PACKAGE_wpad-basic-mbedtls=y'
 assert_contains "$repo/target/linux/bcm27xx/bcm2712/target.mk" 'ARCH_PACKAGES:=aarch64_cortex-a72'
 assert_contains "$repo/include/feeds.mk" 'CONFIG_TARGET_bcm27xx_bcm2712'
 assert_contains "$repo/target/linux/bcm27xx/image/cmdline.txt" 'rootfstype=squashfs,ext4'
 assert_contains "$repo/package/openmanet-node-fixes/files/lib/preinit/79_openmanet_storage_expand" 'resize2fs'
 assert_contains "$repo/package/openmanet-node-fixes/files/lib/preinit/79_openmanet_storage_expand" 'resize.f2fs'
 assert_contains "$repo/feeds/morse/essentials/morse-fw/Makefile" 'mm8108b2-rl.bin'
+assert_contains "$repo/package/firmware/linux-firmware/broadcom.mk" 'brcmfmac43455-sdio.raspberrypi,5-model-b.txt'
+assert_contains "$repo/package/kernel/mac80211/broadcom.mk" 'brcmfmac-bca.ko'
 assert_contains "$repo/feeds/openmanet/routing/batman-adv/Makefile" 'PKG_VERSION:=2025.4'
 assert_contains "$repo/feeds/openmanet/routing/batctl/Makefile" 'PKG_VERSION:=2025.4'
 test ! -d "$repo/package/piaware" || {
@@ -64,7 +71,7 @@ fi
 
 kernel_config=$(find "$repo/build_dir" -path '*/linux-bcm27xx_bcm2712/linux-6.6.133/.config' -type f -print -quit 2>/dev/null || true)
 if [ -n "$kernel_config" ]; then
-	for option in CONFIG_F2FS_FS CONFIG_F2FS_FS_XATTR CONFIG_F2FS_FS_SECURITY CONFIG_SECURITY; do
+	for option in CONFIG_CGROUPS CONFIG_MEMCG CONFIG_F2FS_FS CONFIG_F2FS_FS_XATTR CONFIG_F2FS_FS_SECURITY CONFIG_SECURITY; do
 		grep -E "^${option}=y$" "$kernel_config" >/dev/null || {
 			echo "FAIL: generated kernel is missing $option" >&2
 			exit 1
