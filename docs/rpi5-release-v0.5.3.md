@@ -57,6 +57,15 @@ source-level fixes recorded in `docs/rpi5_firmware_fixes.md`.
 - Theme patch reverse-application test — pass; the patch is anchored to the
   actual Morse LuCI home package used by this image.
 
+The successful build still prints three non-blocking metadata warnings from
+unselected feed packages: the Morse `aws-kvs` recipe references an unavailable
+`gst1-mod-videoparsersbad` package, and two OpenMANET board recipes reference
+the unavailable `usbgadget` package. Those packages are not selected by the
+Pi 5 profile and are absent from the image. The feed's existing Kconfig
+recursive-dependency diagnostics are likewise confined to unused package
+metadata; `make defconfig`, package installation, and image generation all
+completed successfully.
+
 Final SquashFS artifacts and SHA-256 values:
 
 | Artifact | SHA-256 |
