@@ -78,7 +78,9 @@ needed for an OpenMANET node on top of the Build with Parallel Morse firmware:
 
 - **OpenMANET** — `openmanetd`, Alfred, BATMAN-adv, 802.11s support, and the OpenMANET Argon LuCI configuration theme
 - **OpenTAKServer** — Docker, Compose, containerd, runc, and the OpenTAKServer deployment service/configuration
-- **Morse configuration** — the stock Morse LuCI configuration/wizard applications and MM8108 firmware
+- **OpenMANET configuration** — the OpenMANET LuCI theme and the upstream
+  `luci-app-ekhwizards` workflow, including 802.11s Mesh Point/Mesh Gate and
+  BATMAN-adv setup
 - **Pi 5 networking** — onboard BCM43455 Wi-Fi firmware and the standard OpenWrt network/LuCI base
 
 PiAware, dump1090, RTL-SDR, Tailscale, LoRa/Reticulum Python packages, sidecar
@@ -174,7 +176,43 @@ Connect your computer **directly** to the Pi 5 Ethernet jack (do not put the nod
 
 If you plug the node into a home router instead, your computer stays on `192.168.1.x` and cannot reach `10.41.254.1` without a static route.
 
-Open LuCI and use **Wizard** in the top bar. Set a root password from the yellow banner first, then run the wizard to pick region and mode.
+Open LuCI and use **Wizards** in the top bar. Set a root password from the
+yellow banner first, then select **802.11s Mesh**. The wizard provides the
+upstream OpenMANET choices for Mesh Point or Mesh Gate, including the BATMAN
+gateway role and Ethernet uplink mode.
+
+## OpenTAKServer
+
+The OpenTAKServer service starts automatically after Docker is ready. The first
+start pulls the ARM64 containers from their registries, so the node needs
+Internet access during initial deployment. Check progress with:
+
+```sh
+logread -e opentakserver
+docker ps
+docker compose -f /opt/opentakserver/compose.yaml ps
+```
+
+The published endpoints are:
+
+| Function | Address |
+|---|---|
+| Web UI | `http://NODE_IP:8090` |
+| API | `http://NODE_IP:8091` |
+| Plain TCP CoT | `NODE_IP:8088` |
+| TLS CoT for ATAK | `NODE_IP:8089` |
+| RTMP media | `NODE_IP:1935` |
+| RTSP media | `NODE_IP:8554` |
+| HLS media | `http://NODE_IP:8888` |
+
+The database and RabbitMQ ports are private to the Docker network and are not
+published on the node. The deployment randomizes the example database password
+on first start. To set it yourself before deployment, edit
+`/opt/opentakserver/ots_config.env`, then restart:
+
+```sh
+/etc/init.d/opentakserver restart
+```
 
 ## Setting the Region
 

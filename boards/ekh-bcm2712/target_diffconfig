@@ -95,18 +95,22 @@ CONFIG_PACKAGE_luci-acl-umdns=y
 # --- LuCI ---
 CONFIG_PACKAGE_luci=y
 CONFIG_PACKAGE_luci-app-morseconfig=y
-CONFIG_PACKAGE_luci-app-morseapwizard=y
+# The OpenMANET wizard provides the 802.11s Mesh Point/Mesh Gate workflow,
+# including BATMAN-adv gateway configuration.  This is intentionally selected
+# directly rather than through the broader openmanet-morse-stack metapackage.
+CONFIG_PACKAGE_luci-app-ekhwizards=y
 CONFIG_PACKAGE_luci-app-morseguide=y
 CONFIG_PACKAGE_luci-app-morseupgrade=y
 CONFIG_PACKAGE_luci-lib-morseui=y
 CONFIG_PACKAGE_luci-mod-home=y
-CONFIG_PACKAGE_luci-theme-morse=y
-CONFIG_PACKAGE_luci-theme-morseargon=y
 
 # --- OpenMANET configuration theme ---
 # Keep the Morse LuCI applications and use OpenMANET Argon as the default UI.
 CONFIG_PACKAGE_luci-theme-openmanetargon=y
 # The Morse theme defaults run later and would override OpenMANET Argon.
+# The basic Morse AP wizard and Morse themes also define overlapping LuCI
+# entries; exclude them so the OpenMANET wizard is the sole default workflow.
+# CONFIG_PACKAGE_luci-app-morseapwizard is not set
 # CONFIG_PACKAGE_luci-theme-morse is not set
 # CONFIG_PACKAGE_luci-theme-morseargon is not set
 

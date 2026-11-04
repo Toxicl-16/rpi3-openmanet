@@ -52,7 +52,7 @@ The **Waveshare UPS HAT (B) with 2×21700 cells** (designed for Pi 4) does **not
 
 ## First-boot setup (post-flash)
 
-After flashing the image and booting the Pi 5, connect a computer **directly** to the Pi Ethernet jack and open LuCI at `http://10.41.254.1` or SSH as `root@10.41.254.1` (OpenMANET fresh-flash LAN on `eth0`/`br-lan`, `10.41.254.0/24`, blank password). Do not use `192.168.1.1` — that collides with a typical home router. The Morse AP wizard should load; set a root password from the banner, then run the wizard to pick region and mode.
+After flashing the image and booting the Pi 5, connect a computer **directly** to the Pi Ethernet jack and open LuCI at `http://10.41.254.1` or SSH as `root@10.41.254.1` (OpenMANET fresh-flash LAN on `eth0`/`br-lan`, `10.41.254.0/24`, blank password). Do not use `192.168.1.1` — that collides with a typical home router. Set a root password from the banner, open **Wizards**, choose **802.11s Mesh**, and use the upstream Mesh Point/Mesh Gate workflow.
 
 ### Morse USB radio PHY path fix
 
@@ -230,7 +230,8 @@ Tested end-to-end: Gate node (Pi 4, `setup-haven-gate.sh`) + Point node (Pi 5, t
 
 ## TODO
 
-- **LuCI theme: port `luci-theme-argon`** — The current UI uses `luci-theme-morse` (Morse Micro's purple-branded bootstrap fork). Replace with [luci-theme-argon](https://github.com/jerrykuku/luci-theme-argon) for a modern look (dark mode, card layout, responsive sidebar). Argon targets OpenWrt 21.02+ so it should be compatible with the 23.05 base. Package it as `luci-theme-haven`, swap in Haven branding (logo, colors), and add `CONFIG_PACKAGE_luci-theme-haven=y` to `boards/ekh-bcm2712/target_diffconfig`. As an interim step, forking `luci-theme-morse` with just logo/color swaps is also viable.
+- Port the permanent MM8108 PHY-path correction into the Morse Wi-Fi detect
+  path so the post-boot workaround is no longer needed.
 
 ## Related but separate
 

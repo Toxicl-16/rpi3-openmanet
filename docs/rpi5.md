@@ -19,6 +19,7 @@ The profile is `boards/ekh-bcm2712/target_diffconfig` and produces images in `bi
 - Morse MM8108 USB driver and firmware
 - `openmanetd` and its declared Alfred/runtime dependencies
 - OpenMANET Argon LuCI configuration theme
+- The upstream OpenMANET `802.11s Mesh` wizard, including Mesh Gate setup
 - Docker, Compose, containerd, and runc
 - OpenTAKServer's OpenWrt deployment package
 
@@ -41,6 +42,16 @@ The setup script installs the pinned Morse and OpenMANET feeds and applies the h
 
 ## First boot
 
-Flash the factory image to an SD card, connect directly to Ethernet, and use `10.41.254.1` for LuCI or SSH. Set a root password immediately. `openmanetd` is included in the image; the OpenTAKServer service starts after Docker is ready and pulls its ARM64 application images unless an offline bundle is supplied.
+Flash the factory image to an SD card, connect directly to Ethernet, and use
+`10.41.254.1` for LuCI or SSH. Set a root password immediately. Open LuCI's
+**Wizards** menu, choose **802.11s Mesh**, and select **Mesh Gate** when this
+Pi is the Internet gateway. `openmanetd` is included in the image; the
+OpenTAKServer service starts after Docker is ready and pulls its ARM64
+application images unless an offline bundle is supplied.
+
+OpenTAKServer provides its web UI at `http://NODE_IP:8090`, API at
+`http://NODE_IP:8091`, plain TCP CoT at `NODE_IP:8088`, and TLS CoT at
+`NODE_IP:8089`. Use the TLS CoT endpoint for ATAK after the server's
+certificates/users are configured in the web UI.
 
 System-level Raspberry Pi 5 boot and RF operation require physical Pi 5/MM8108 hardware. QEMU system emulation was not used as an acceptance criterion because the available QEMU release has no Raspberry Pi 5 machine model.
