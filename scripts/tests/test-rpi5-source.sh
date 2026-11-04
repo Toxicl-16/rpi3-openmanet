@@ -16,6 +16,13 @@ assert_contains() {
 
 assert_contains "$board" 'CONFIG_PACKAGE_openmanet-node-fixes=y'
 assert_contains "$board" 'CONFIG_PACKAGE_opentakserver=y'
+if grep -F 'CONFIG_TARGET_DEFAULT_LAN_IP_FROM_PREINIT=y' "$board" >/dev/null; then
+	echo 'FAIL: Pi 5 must not generate a duplicate late LAN-IP board script' >&2
+	exit 1
+fi
+assert_contains "$repo/target/linux/bcm27xx/base-files/etc/board.d/02_network" 'raspberrypi,5-model-b)'
+assert_contains "$repo/target/linux/bcm27xx/base-files/lib/preinit/05_set_preinit_iface_brcm2708" 'raspberrypi,5-model-b |'
+assert_contains "$repo/target/linux/bcm27xx/base-files/etc/board.d/02_network" 'ipaddr "10.41.254.1"'
 assert_contains "$board" 'CONFIG_PACKAGE_batctl-default=y'
 assert_contains "$board" 'CONFIG_PACKAGE_libcap-bin=y'
 assert_contains "$board" 'CONFIG_KERNEL_MEMCG=y'
