@@ -17,6 +17,7 @@ The profile is `boards/ekh-bcm2712/target_diffconfig` and produces images in `bi
 - Raspberry Pi 5 (`rpi-5`) 6.6 kernel support
 - Morse MM8108 USB driver and firmware
 - `openmanetd` and its declared Alfred/runtime dependencies
+- OpenMANET Argon LuCI configuration theme
 - Docker, Compose, containerd, and runc
 - OpenTAKServer's OpenWrt deployment package
 

@@ -212,10 +212,10 @@ if [ "${INITIALIZE}" ]; then
     patch_feeds_packages
     ./scripts/feeds update -i
     ./scripts/feeds install -p morse -a
-    # Install only the OpenMANET manager. Its package metadata pulls in Alfred
-    # and the runtime libraries it needs; do not replace the bare Morse LuCI
-    # interface with an unrelated OpenMANET theme/metapackage.
-    ./scripts/feeds install -p openmanet openmanetd
+    # Install the OpenMANET manager and its configuration theme. The manager's
+    # package metadata pulls in Alfred and the runtime libraries it needs; do
+    # not install the broader OpenMANET stack metapackage or wizard here.
+    ./scripts/feeds install -p openmanet openmanetd luci-theme-openmanetargon
     for feed in packages routing telephony luci prpl; do
         ./scripts/feeds install -p "$feed" -a
     done
