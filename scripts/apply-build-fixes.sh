@@ -19,16 +19,6 @@ apply_patch_once() {
 # Existing checkouts may still have the old feed recipe installed. Fresh
 # feed installs automatically prefer the in-tree package/lang/rust recipe.
 ./scripts/feeds uninstall rust
-# The OpenMANET feed pins BATMAN-adv 2025.4 and batctl 2025.4. Older
-# checkouts may still contain package/feeds/routing links from the removed
-# generic routing feed, so remove only those three conflicting links before
-# installing the OpenMANET implementations.
-for package in batman-adv batctl alfred; do
-    link="package/feeds/routing/$package"
-    [ -e "$link" ] || [ -L "$link" ] || continue
-    unlink "$link"
-done
-./scripts/feeds install -p openmanet batman-adv batctl alfred
 apply_patch_once patches/build-fixes/002-morse-backports-version.patch
 cp patches/build-fixes/003-morse-optional-spi-flag.patch \
     feeds/morse/essentials/morse_driver/patches/016-optional-spi-flag.patch
