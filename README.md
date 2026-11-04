@@ -179,7 +179,8 @@ If you plug the node into a home router instead, your computer stays on `192.168
 Open LuCI and use **Wizards** in the top bar. Set a root password from the
 yellow banner first, then select **802.11s Mesh**. The wizard provides the
 upstream OpenMANET choices for Mesh Point or Mesh Gate, including the BATMAN
-gateway role and Ethernet uplink mode.
+gateway role and Ethernet uplink mode. See the complete [startup checklist](docs/startup.md)
+for verification commands, the MM8108 radio workaround, and OpenTAKServer setup.
 
 ## OpenTAKServer
 
