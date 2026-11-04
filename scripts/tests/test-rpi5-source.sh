@@ -41,6 +41,7 @@ assert_contains "$repo/package/openmanet-node-fixes/files/lib/preinit/79_openman
 assert_contains "$repo/package/openmanet-node-fixes/files/lib/preinit/79_openmanet_storage_expand" 'resize.f2fs'
 assert_contains "$repo/feeds/morse/essentials/morse-fw/Makefile" 'mm8108b2-rl.bin'
 assert_contains "$repo/package/firmware/linux-firmware/broadcom.mk" 'brcmfmac43455-sdio.raspberrypi,5-model-b.txt'
+assert_contains "$repo/package/firmware/cypress-firmware/Makefile" 'brcmfmac43455-sdio.raspberrypi,5-model-b.bin'
 assert_contains "$repo/package/kernel/mac80211/broadcom.mk" 'brcmfmac-bca.ko'
 assert_contains "$repo/feeds/routing/batman-adv/Makefile" 'PKG_VERSION:=2023.1'
 assert_contains "$repo/feeds/routing/batctl/Makefile" 'PKG_VERSION:=2023.1'

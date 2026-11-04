@@ -187,6 +187,26 @@ define Package/cypress-firmware-43455-sdio/install
 	$(LN) \
 		../cypress/cyfmac43455-sdio.clm_blob \
 		$(1)/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
+	# brcmfmac requests a board-specific binary before falling back to the
+	# generic name. Raspberry Pi 5's DT uses these model-specific paths.
+	$(LN) \
+		../cypress/cyfmac43455-sdio.bin \
+		$(1)/lib/firmware/brcm/brcmfmac43455-sdio.raspberrypi,5-model-b.bin
+	$(LN) \
+		../cypress/cyfmac43455-sdio.bin \
+		$(1)/lib/firmware/brcm/brcmfmac43455-sdio.raspberrypi,5-compute-module.bin
+	$(LN) \
+		../cypress/cyfmac43455-sdio.bin \
+		$(1)/lib/firmware/brcm/brcmfmac43455-sdio.raspberrypi,500.bin
+	$(LN) \
+		../cypress/cyfmac43455-sdio.clm_blob \
+		$(1)/lib/firmware/brcm/brcmfmac43455-sdio.raspberrypi,5-model-b.clm_blob
+	$(LN) \
+		../cypress/cyfmac43455-sdio.clm_blob \
+		$(1)/lib/firmware/brcm/brcmfmac43455-sdio.raspberrypi,5-compute-module.clm_blob
+	$(LN) \
+		../cypress/cyfmac43455-sdio.clm_blob \
+		$(1)/lib/firmware/brcm/brcmfmac43455-sdio.raspberrypi,500.clm_blob
 endef
 
 $(eval $(call BuildPackage,cypress-firmware-43455-sdio))
