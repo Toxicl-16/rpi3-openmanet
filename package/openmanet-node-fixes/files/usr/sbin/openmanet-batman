@@ -57,11 +57,18 @@ repair() {
 
 	disabled="$(uci -q get network.bat0.disabled 2>/dev/null || true)"
 	gate="$(uci -q get mesh11sd.mesh_params.mesh_gate_announcements 2>/dev/null || true)"
-	# A disabled bat0 with no selected role is treated as an intentional user
-	# choice. Once the OpenMANET wizard has selected gate/point, repair it.
-	if [ "$disabled" = 1 ] && [ "$gate" != 0 ] && [ "$gate" != 1 ]; then
-		log_msg 'bat0 is explicitly disabled and no mesh role is selected; preserving it'
-		return 0
+	# Do not touch a fresh/default configuration. The OpenMANET wizard records
+	# the gate/point decision in mesh_gate_announcements; that explicit value is
+	# the only signal that mesh routing should be enabled automatically.
+	case "$gate" in
+		0|1) ;;
+		*)
+			log_msg 'no OpenMANET mesh role selected; leaving network unchanged'
+			return 0
+			;;
+	esac
+	if [ "$disabled" = 1 ]; then
+		log_msg 'mesh role selected; clearing stale bat0 disabled flag'
 	fi
 
 	uci -q set network.bat0='interface'

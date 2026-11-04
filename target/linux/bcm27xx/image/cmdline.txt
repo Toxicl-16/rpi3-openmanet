@@ -1,1 +1,1 @@
-console=serial0 console=ttyUSB0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=squashfs,f2fs rootwait fstools_overlay_fstype=f2fs
+console=serial0 console=ttyUSB0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=squashfs,ext4 rootwait

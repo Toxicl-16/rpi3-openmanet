@@ -11,14 +11,14 @@ define Package/openmanet-node-fixes
   SECTION:=net
   CATEGORY:=Network
   TITLE:=OpenMANET Pi 5 boot migrations and diagnostics
-  DEPENDS:=+parted +partx-utils +losetup +blkid +f2fsck +libcap-bin +batctl
+  DEPENDS:=+parted +partx-utils +losetup +blkid +f2fsck +e2fsprogs +resize2fs +libcap-bin +batctl
   PKGARCH:=all
 endef
 
 define Package/openmanet-node-fixes/description
-Pi 5-only source-level migrations for F2FS SD-card growth, BATMAN-V
-topology repair, and first-boot health diagnostics. Migrations are
-idempotent and never replace the user's UCI configuration.
+Pi 5-only source-level migrations for SD-card growth, BATMAN-V topology
+repair, and first-boot health diagnostics. Migrations are idempotent and
+never replace the user's UCI configuration.
 endef
 
 define Build/Compile

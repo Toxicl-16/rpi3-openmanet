@@ -32,7 +32,15 @@ overlay_mount="$(awk '$2 == "/overlay" { print; exit }' /proc/mounts 2>/dev/null
 storage_mount="$(awk '$2 == "/tmp/overlay" { print; exit }' /proc/mounts 2>/dev/null || true)"
 [ -n "$overlay_mount" ] && result PASS 'overlay-mounted' "$overlay_mount" || result FAIL 'overlay-mounted' 'no /overlay mount'
 [ -n "$storage_mount" ] && result PASS 'storage-mounted' "$storage_mount" || result FAIL 'storage-mounted' 'no underlying overlay filesystem mount'
-echo "$storage_mount" | grep -q ' f2fs ' && result PASS 'f2fs-overlay' 'F2FS is mounted' || result WARN 'f2fs-overlay' 'overlay is not F2FS'
+storage_type="$(echo "$storage_mount" | awk '{ print $3; exit }')"
+case "$storage_type" in
+	ext4|f2fs)
+		result PASS 'overlay-filesystem' "$storage_type is mounted"
+		;;
+	*)
+		result WARN 'overlay-filesystem' "unexpected or unknown type: ${storage_type:-none}"
+		;;
+esac
 
 overlay_dev="$(echo "$storage_mount" | awk '{print $1}')"
 [ -n "$overlay_dev" ] && [ -b "$overlay_dev" ] && result PASS 'root-storage' "$overlay_dev" || result FAIL 'root-storage' 'block device not identified'
