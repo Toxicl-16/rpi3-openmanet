@@ -1,0 +1,15 @@
+OpenTAKServer deployment for the Build with Parallel Raspberry Pi 5 image.
+
+The firmware includes Docker, Docker Compose, this deployment, and an
+OpenWrt procd service. The service is enabled by default and stores its data
+under /opt/opentakserver, which is on the writable OpenWrt overlay.
+
+On first start Docker pulls the ARM64 OpenTAKServer images from their
+registries. Internet access is required for that first pull unless an
+offline-images.tar.zst bundle is supplied in /opt/opentakserver or mounted at
+/mnt/opentakserver. The bundle is removed after import to preserve storage.
+
+Edit /opt/opentakserver/ots_config.env before creating users if you need a
+specific database password. The example password is randomized automatically
+on first service start. Direct service ports are 8090 (web UI), 8091 (API),
+8088 (TCP CoT), and 8089 (TLS CoT).

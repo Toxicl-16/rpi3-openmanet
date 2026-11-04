@@ -122,9 +122,10 @@ CONFIG_BUSYBOX_CONFIG_I2CDUMP=y
 CONFIG_BUSYBOX_CONFIG_I2CDETECT=y
 CONFIG_BUSYBOX_CONFIG_I2CTRANSFER=y
 
-# Compile all kmods
-CONFIG_ALL_KMODS=y
-CONFIG_ALL_NONSHARED=y
+# Board profiles select the kernel modules they need.  Do not pull the entire
+# OpenWrt kernel-module universe into every image.
+# CONFIG_ALL_KMODS is not set
+# CONFIG_ALL_NONSHARED is not set
 
 # We explicity disable kmod-pf-ring here as it does not compile
 # in the upstream. See issue 23621:

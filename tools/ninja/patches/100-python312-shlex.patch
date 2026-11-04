@@ -1,0 +1,14 @@
+--- a/configure.py
++++ b/configure.py
+@@ -23,5 +23,5 @@
+ import os
+-import pipes
++import shlex
+ import string
+ import subprocess
+ import sys
+@@ -264,3 +264,3 @@
+     configure_env = {k: os.environ[k] for k in envvars if k in os.environ}
+-    config_str = ' '.join([k + '=' + pipes.quote(configure_env[k])
++    config_str = ' '.join([k + '=' + shlex.quote(configure_env[k])
+                            for k in sorted(configure_env)])

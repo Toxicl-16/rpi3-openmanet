@@ -24,6 +24,7 @@ ifneq ($(shell $(HOSTCC) --version | grep clang),)
   HOST_CFLAGS += -D__GNUC_PREREQ\(...\)=0 -Dloff_t=off_t
 endif
 HOST_CFLAGS += $(HOST_FPIC)
+HOST_CFLAGS += -std=gnu17
 
 HOST_CONFIGURE_ARGS += \
 	--disable-elf-shlibs \

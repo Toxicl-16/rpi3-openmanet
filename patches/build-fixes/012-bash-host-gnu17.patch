@@ -1,0 +1,5 @@
+--- a/feeds/packages/utils/bash/Makefile
++++ b/feeds/packages/utils/bash/Makefile
+@@ -76,0 +77,2 @@
++CONFIGURE_VARS += CFLAGS_FOR_BUILD="-std=gnu17"
++

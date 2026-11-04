@@ -1,0 +1,37 @@
+#!/bin/sh
+
+set -eu
+
+DATA_ROOT=/opt/opentakserver
+COMPOSE="$DATA_ROOT/compose.yaml"
+BUNDLE="$DATA_ROOT/offline-images.tar.zst"
+
+mkdir -p "$DATA_ROOT" "$DATA_ROOT/ots" "$DATA_ROOT/ots/pgdata"
+
+# Never leave the example database password active on a deployed node.
+if grep -q 'openmanet-change-me' "$DATA_ROOT/ots_config.env"; then
+	password=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32)
+	sed -i "s/openmanet-change-me/$password/g" "$DATA_ROOT/ots_config.env"
+fi
+
+if [ "${1:-}" = setup ]; then
+	printf '%s\n' 'OpenTAKServer deployment installed.'
+	printf '%s\n' 'Edit /opt/opentakserver/ots_config.env, then restart /etc/init.d/opentakserver.'
+	exit 0
+fi
+
+[ "${1:-}" = run ] || exit 0
+
+# A bundle may be copied onto /mnt/opentakserver before first boot. If no
+# bundle is present, Compose performs the normal registry pull for ARM64.
+if [ -f "$BUNDLE" ]; then
+	logger -t opentakserver "loading offline OpenTAKServer image bundle from $BUNDLE"
+	docker load -i "$BUNDLE"
+	# Keep the large archive out of the writable data volume after import.
+	rm -f "$BUNDLE"
+elif [ -f /mnt/opentakserver/offline-images.tar.zst ]; then
+	logger -t opentakserver 'loading offline OpenTAKServer image bundle from /mnt/opentakserver'
+	docker load -i /mnt/opentakserver/offline-images.tar.zst
+fi
+
+exec docker compose -f "$COMPOSE" up --remove-orphans

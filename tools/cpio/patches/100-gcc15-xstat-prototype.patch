@@ -1,0 +1,7 @@
+--- a/src/global.c
++++ b/src/global.c
+@@ -186,3 +186,3 @@
+    dereferencing of symlinks is done for input files.  */
+-int (*xstat) ();
++int (*xstat) (const char *, struct stat *);
+ 

@@ -28,6 +28,12 @@ cp patches/build-fixes/005-morse-channel-ignore-fallback.patch \
     feeds/morse/essentials/morse_driver/patches/018-channel-ignore-fallback.patch
 apply_patch_once patches/build-fixes/006-pi4-eeprom-dependency.patch
 apply_patch_once patches/build-fixes/007-luci-iwinfo-buffer-compat.patch
+apply_patch_once patches/build-fixes/008-luci-lemon-prototypes.patch
+apply_patch_once patches/build-fixes/009-golang-host-gnu17.patch
+cp patches/build-fixes/010-perl-sdbm-gcc15.patch \
+    feeds/packages/lang/perl/patches/1000-gcc15-sdbm.patch
+apply_patch_once patches/build-fixes/011-luci-runtime-lemon-prototypes.patch
+apply_patch_once patches/build-fixes/012-bash-host-gnu17.patch
 # These unused prpl forks conflict with the 23.05 LuCI UPnP dependency graph.
 # The Pi 5 image uses firewall4 and does not select either fork.
 ./scripts/feeds uninstall miniupnpd-prpl miniupnpd2

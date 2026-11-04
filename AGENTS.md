@@ -4,7 +4,7 @@ High-level context for agents and contributors landing in this repo cold. For bu
 
 ## What this repo is
 
-A community backport that brings Morse Micro HaLow firmware to the Raspberry Pi 5. The official Morse Micro OpenWrt SDK ships on OpenWrt 23.05 / kernel 5.15 and only supports Pi 4 — Pi 5 needs OpenWrt 24.10's bcm2712/RP1 hardware definitions and kernel 6.6, which Morse hasn't shipped yet. This repo vendors those hardware definitions back into the 23.05 SDK so the existing Morse package set can build for Pi 5.
+A community OpenMANET/OpenWrt tree with an active Raspberry Pi 5 target and an archived Raspberry Pi 3B+ target reference. The active Pi 5 profile brings Morse Micro HaLow firmware to the Pi 5 and adds `openmanetd`, Docker, and an OpenTAKServer deployment. The official Morse Micro OpenWrt SDK ships on OpenWrt 23.05 / kernel 5.15 and only supports Pi 4 — Pi 5 needs OpenWrt 24.10's bcm2712/RP1 hardware definitions and kernel 6.6, which Morse hasn't shipped yet. This repo vendors those hardware definitions back into the 23.05 SDK so the existing Morse package set can build for Pi 5.
 
 The work is sometimes called a "kernel uplift backport": same Morse SDK userspace, target-wide kernel bump 5.15 → 6.6, mac80211 backports 6.1.110 → 6.12.61, plus net-new bcm2712 subtarget, RP1 patches, and Pi 5 device profile.
 
@@ -26,7 +26,7 @@ The work is sometimes called a "kernel uplift backport": same Morse SDK userspac
 
 | Item | Value |
 |---|---|
-| Active branch | `rpi5-mm-23.05` |
+| Active branch | `main` |
 | Upstream base | `mm/v23.05.5` (Morse SDK 23.05.5) |
 | Kernel | 6.6.133 (vendored from openwrt-24.10) |
 | mac80211 backports | 6.12.61 |
@@ -177,6 +177,8 @@ Three-line summary; see README for details:
 1. `cp boards/ekh-bcm2712/target_diffconfig .config && make defconfig`
 2. `./scripts/feeds update -a && ./scripts/feeds install -a` (first time or after feed bumps)
 3. `make -j$(nproc) V=sc 2>&1 | tee log.txt`
+
+The active build is the Pi 5 profile. The earlier Pi 3B+ image and its recorded checksum are documented in [docs/rpi3b-plus.md](docs/rpi3b-plus.md).
 
 The board diffconfig is what determines image contents. To add a package, append `CONFIG_PACKAGE_<name>=y` to `boards/ekh-bcm2712/target_diffconfig` and rebuild — do not write to `.config` directly, since `make defconfig` regenerates it.
 

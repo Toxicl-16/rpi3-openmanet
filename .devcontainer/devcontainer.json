@@ -1,0 +1,17 @@
+{
+  "name": "OpenMANET Raspberry Pi firmware",
+  "image": "ghcr.io/openwrt/buildbot/buildworker-v3.8.0:v9",
+  "remoteUser": "buildbot",
+  "workspaceFolder": "/workspaces/rpi3-openmanet",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "plorefice.devicetree"
+      ]
+    }
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspaces/rpi3-openmanet,type=bind,consistency=cached"
+  ]
+}

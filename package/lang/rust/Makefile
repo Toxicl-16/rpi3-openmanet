@@ -68,6 +68,8 @@ HOST_CONFIGURE_ARGS = \
 	--build=$(RUSTC_HOST_ARCH) \
 	--target=$(RUSTC_TARGET_ARCH),$(RUSTC_HOST_ARCH) \
 	--host=$(RUSTC_HOST_ARCH) \
+	--set=target.$(RUSTC_HOST_ARCH).cc=/usr/bin/gcc-13 \
+	--set=target.$(RUSTC_HOST_ARCH).cxx=/usr/bin/g++-13 \
 	--prefix=$(STAGING_DIR)/host \
 	--bindir=$(STAGING_DIR)/host/bin \
 	--libdir=$(STAGING_DIR)/host/lib \

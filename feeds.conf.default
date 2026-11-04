@@ -6,3 +6,5 @@ src-git luci https://github.com/MorseMicro/luci.git^bbf0649ffd0557cb0b783dbeddb1
 # 2.9-dev snapshot: Morse driver/firmware 1.16.4 for the 23.05 SDK.
 src-git morse https://github.com/MorseMicro/morse-feed.git^263b4c4ed8ae1683a180ce9cd28d3516c40dbce5
 src-git prpl https://github.com/MorseMicro/feed-prpl.git^16369d2f4b76b2c9f4b7a848065e93059ac589a7
+# OpenMANET manager daemon and its Alfred support package.
+src-git openmanet https://github.com/OpenMANET/packages.git^4736e44791166e3252ddbc4f050a784b8b5ab062

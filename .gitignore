@@ -23,6 +23,7 @@
 key-build*
 *.orig
 *.rej
+*.log
 *~
 .#*
 *#

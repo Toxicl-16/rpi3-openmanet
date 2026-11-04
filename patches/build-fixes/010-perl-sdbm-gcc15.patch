@@ -1,0 +1,24 @@
+--- a/ext/SDBM_File/SDBM_File.xs
++++ b/ext/SDBM_File/SDBM_File.xs
+@@ -65,7 +65,7 @@ sdbm_DESTROY(db)
+ 	    do {
+ 		if (db->filter[i])
+ 		    SvREFCNT_dec_NN(db->filter[i]);
+ 	    } while (i-- > 0);
+-	    safefree(db) ;
++	    safefree((Malloc_t)db) ;
+ 	}
+ 
+ datum_value
+--- a/ext/SDBM_File/sdbm.c
++++ b/ext/SDBM_File/sdbm.c
+@@ -29,9 +29,6 @@ extern int errno;
+ extern "C" {
+ #endif
+ 
+-extern Malloc_t malloc(MEM_SIZE);
+-extern Free_t free(Malloc_t);
+-
+ #ifdef __cplusplus
+ }
+ #endif

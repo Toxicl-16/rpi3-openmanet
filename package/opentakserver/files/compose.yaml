@@ -1,0 +1,108 @@
+services:
+  ots-db:
+    image: kartoza/postgis:16-3.4
+    container_name: ots-db
+    hostname: ots-db
+    restart: unless-stopped
+    env_file: ots_config.env
+    volumes:
+      - ./ots/pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ots -d ots"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: ots-rabbitmq
+    hostname: rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  mediamtx:
+    image: bluenviron/mediamtx:1.13.0-ffmpeg
+    container_name: ots-mediamtx
+    hostname: mediamtx
+    restart: unless-stopped
+    ports:
+      - "1935:1935"
+      - "8554:8554"
+      - "8888:8888"
+      - "9997:9997"
+
+  ots:
+    image: ghcr.io/brian7704/opentakserver:latest
+    container_name: opentakserver
+    hostname: opentakserver
+    restart: unless-stopped
+    tty: true
+    env_file: ots_config.env
+    ports:
+      - "8091:8081"
+    volumes:
+      - ./ots:/app/ots:rw
+    depends_on:
+      ots-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mediamtx:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8081/api/health || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  ots-cot-parser:
+    image: ghcr.io/brian7704/ots_cot_parser:master
+    container_name: ots-cot-parser
+    restart: unless-stopped
+    command: python3 /app/venv/bin/cot_parser
+    env_file: ots_config.env
+    volumes:
+      - ./ots:/app/ots:rw
+    depends_on:
+      ots:
+        condition: service_healthy
+
+  ots-eud-handler:
+    image: ghcr.io/brian7704/ots_eud_handler:master
+    container_name: ots-eud-handler
+    restart: unless-stopped
+    command: python3 /app/venv/bin/eud_handler
+    env_file: ots_config.env
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./ots:/app/ots:rw
+    depends_on:
+      ots:
+        condition: service_healthy
+
+  ots-eud-handler-ssl:
+    image: ghcr.io/brian7704/ots_eud_handler_ssl:master
+    container_name: ots-eud-handler-ssl
+    restart: unless-stopped
+    command: python3 /app/venv/bin/eud_handler --ssl
+    env_file: ots_config.env
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./ots:/app/ots:rw
+    depends_on:
+      ots:
+        condition: service_healthy
+
+  ots-webui:
+    image: ghcr.io/brian7704/opentakserver-ui:master
+    container_name: ots-webui
+    restart: unless-stopped
+    ports:
+      - "8090:80"

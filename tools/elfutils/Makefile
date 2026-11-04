@@ -19,6 +19,10 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/host-build.mk
 
+HOST_CFLAGS += \
+	-Wno-error=unterminated-string-initialization \
+	-Wno-error=discarded-qualifiers
+
 HOST_CONFIGURE_ARGS += \
 	--disable-debuginfod \
 	--disable-libdebuginfod \

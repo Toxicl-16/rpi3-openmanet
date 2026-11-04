@@ -17,6 +17,8 @@ PKG_MIRROR_HASH:=4f1cde5da35a1e768f6a01d67888549d04512073990769342381af1b2c9e7fd
 
 include $(INCLUDE_DIR)/host-build.mk
 
+HOST_CFLAGS += -std=gnu17
+
 define Host/Compile
 	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR)/fwcutter \
 		CFLAGS="$(HOST_CFLAGS) -include endian.h" \

@@ -1,0 +1,9 @@
+--- a/feeds/packages/lang/golang/golang/Makefile
++++ b/feeds/packages/lang/golang/golang/Makefile
+@@ -236,7 +236,7 @@ HOST_GO_VARS= \
+ 	GOHOSTARCH="$(GO_HOST_ARCH)" \
+ 	GOCACHE="$(GO_BUILD_CACHE_DIR)" \
+ 	GOENV=off \
+-	CC="$(HOSTCC_NOCACHE)" \
++	CC="$(TOPDIR)/scripts/gcc-gnu17" \
+ 	CXX="$(HOSTCXX_NOCACHE)"

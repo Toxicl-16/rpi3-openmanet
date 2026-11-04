@@ -212,12 +212,23 @@ if [ "${INITIALIZE}" ]; then
     patch_feeds_packages
     ./scripts/feeds update -i
     ./scripts/feeds install -p morse -a
-    ./scripts/feeds install -a
+    # Install only the OpenMANET packages needed by openmanetd. The feed also
+    # carries Morse packages with names that intentionally overlap the pinned
+    # Morse feed above; installing the whole feed would make the selected
+    # Build with Parallel driver source non-deterministic.
+    ./scripts/feeds install -p openmanet openmanetd alfred
+    for feed in packages routing telephony luci prpl; do
+        ./scripts/feeds install -p "$feed" -a
+    done
     
     # compile when using an external toolchain due to a bug in 998b6d4.
     # The bug is fixed in the upstream 3856074, but not pulled into 23.
     ./scripts/feeds uninstall xtables-addons
     ./scripts/feeds install -f -p morse iwinfo
+    # Keep the Pi 5 compatibility patches part of the normal setup flow.
+    if [ -x ./scripts/apply-build-fixes.sh ]; then
+        ./scripts/apply-build-fixes.sh
+    fi
 fi
 
 case "${MODE}" in
@@ -283,6 +294,33 @@ case "${MODE}" in
 
         echo Make defconfig...
         make defconfig
+
+        # openmanetd links against audio support. With ALL_KMODS enabled by
+        # the common profile, Kconfig otherwise lowers its selected USB audio
+        # module and the daemon to =m, which excludes both from the image.
+        # Force the explicitly requested Pi 5 runtime packages back to =y
+        # after defconfig has resolved the rest of the profile.
+        if [ "${BOARD}" = "ekh-bcm2712" ]; then
+            sed -i '/^CONFIG_ALL_KMODS=.*/d; /^# CONFIG_ALL_KMODS is not set$/d' .config
+            echo '# CONFIG_ALL_KMODS is not set' >> .config
+            sed -i '/^CONFIG_ALL_NONSHARED=.*/d; /^# CONFIG_ALL_NONSHARED is not set$/d' .config
+            echo '# CONFIG_ALL_NONSHARED is not set' >> .config
+
+            for package in kmod-usb-audio openmanetd; do
+                if grep -q "^CONFIG_PACKAGE_${package}=" .config; then
+                    sed -i "s/^CONFIG_PACKAGE_${package}=.*/CONFIG_PACKAGE_${package}=y/" .config
+                else
+                    echo "CONFIG_PACKAGE_${package}=y" >> .config
+                fi
+            done
+
+    # ALL_KMODS selects unrelated legacy switch modules that are not used by
+    # the Pi 5 Morse/MM8108 node and fail against the 6.6 kernel API.
+    for package in kmod-swconfig kmod-switch-ar8xxx kmod-gpio-button-hotplug kmod-mdio-netlink kmod-zram; do
+        sed -i "/^CONFIG_PACKAGE_${package}=.*/d; /^# CONFIG_PACKAGE_${package} is not set$/d" .config
+        echo "# CONFIG_PACKAGE_${package} is not set" >> .config
+    done
+        fi
 
         if [ "${EXT_TOOLCHAIN}" = "1" ]; then
             read -r target subtarget <<<"$(sed -nE 's/^CONFIG_TARGET_([a-z0-9]+)_([a-z0-9]+)=y/\1 \2/p' "boards/${BOARD}/target_diffconfig")"

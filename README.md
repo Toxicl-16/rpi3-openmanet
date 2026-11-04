@@ -1,4 +1,4 @@
-# OpenWrt Morse HaLow Firmware for Raspberry Pi 5
+# OpenMANET HaLow Firmware for Raspberry Pi
 
 [![OpenWrt 23.05](https://img.shields.io/badge/OpenWrt-23.05-blue)](https://github.com/MorseMicro/openwrt)
 [![Kernel 6.6](https://img.shields.io/badge/Linux%20kernel-6.6-lightgrey)](https://github.com/openwrt/openwrt)
@@ -8,7 +8,16 @@
 
 ![Haven Pi 5 — Raspberry Pi 5 with Morse Micro HaLow radio, UPS HAT, and battery stack](docs/haven-pi5.png)
 
-OpenWrt-based Morse Micro HaLow firmware targeting the Raspberry Pi 5. Brings sub-GHz long-range 802.11ah (HaLow) Wi-Fi to the Pi 5 via Morse Micro radios.
+OpenWrt-based Morse Micro HaLow firmware for Raspberry Pi MANET nodes. The active build targets the Raspberry Pi 5 and adds `openmanetd`, Docker, and an OpenTAKServer deployment on top of Build with Parallel's working MM8108 USB firmware. The repository also retains documentation for the earlier Raspberry Pi 3B+ OpenMANET image.
+
+## Supported targets
+
+| Target | Status | Radio path | Documentation |
+|---|---|---|---|
+| Raspberry Pi 5 (`bcm2712`) | Active build target; image built and SquashFS verified | Morse Micro MM8108 over USB | [Pi 5 guide](docs/rpi5.md) |
+| Raspberry Pi 3B+ (`bcm2710`) | Archived OpenMANET target and hardware reference | Morse Micro MM8108 over USB | [Pi 3B+ guide](docs/rpi3b-plus.md) |
+
+The Pi 5 image is the firmware currently produced by this checkout. The Pi 3B+ page records the previously published image and its verification metadata; it is kept separate from the Pi 5 build profile.
 
 This repo is a community backport. The [Morse Micro OpenWrt SDK](https://github.com/MorseMicro/openwrt) ships on OpenWrt 23.05 (kernel 5.15) and supports Pi 4. The bcm2712/RP1 hardware definitions from upstream OpenWrt 24.10 (kernel 6.6) have been vendored back so the same Morse SDK can build for Pi 5.
 
@@ -96,9 +105,9 @@ sudo apt install build-essential clang flex g++ gawk gcc-multilib g++-multilib g
 ### 2. Clone
 
 ```
-git clone -b rpi5-mm-23.05 https://github.com/buildwithparallel/openwrt-morse-rpi5.git
-sudo chown -R $USER:$USER openwrt-morse-rpi5
-cd openwrt-morse-rpi5
+git clone -b main https://github.com/Toxicl-16/rpi3-openmanet.git
+sudo chown -R $USER:$USER rpi3-openmanet
+cd rpi3-openmanet
 ```
 
 The `chown` ensures every file in the cloned tree is owned by your user. OpenWrt's build system refuses to run as root and trips over root-owned files, so this avoids permission errors later.
@@ -117,7 +126,7 @@ The Morse, LuCI, and prpl feeds are pinned to matching 2.9-dev snapshots, includ
 
 The Rust recipe is maintained in-tree at `package/lang/rust/` and is automatically preferred over the packages feed recipe. It builds LLVM from the hash-verified Rust release sources, avoiding the expired Rust CI LLVM download without a manual patch. The first build takes longer; subsequent builds reuse the compiled toolchain. Do not force-install the feed's Rust package with `./scripts/feeds install -f rust`, since that overrides this fix. For existing checkouts, the fix script removes the old Rust feed link so the in-tree recipe is used.
 
-### 4. Drop in the Pi 5 config
+### 4. Select the active Pi 5 config
 
 ```
 cp boards/ekh-bcm2712/target_diffconfig .config
@@ -141,13 +150,19 @@ make -j$(nproc) V=sc 2>&1 | tee log.txt
 
 `V=sc` enables verbose compile output; `tee log.txt` captures it for troubleshooting.
 
-When the build finishes, the image is at:
+When the build finishes, the Pi 5 image is under:
 
 ```
-bin/targets/bcm27xx/bcm2712/openwrt-bcm27xx-bcm2712-rpi-5-squashfs-factory.img.gz
+bin/targets/bcm27xx/bcm2712/*rpi-5-squashfs-*.img.gz
 ```
 
-Flash to an SD card with [Raspberry Pi Imager](https://www.raspberrypi.com/software/) (choose "Use custom" and select the `.img.gz`) and boot the Pi 5.
+Flash the `*-factory.img.gz` file to an SD card with [Raspberry Pi Imager](https://www.raspberrypi.com/software/) (choose "Use custom") and boot the Pi 5.
+
+## OpenMANET and OpenTAKServer services
+
+The Pi 5 profile includes the Morse MM8108 driver and firmware, `openmanetd`, Docker, Docker Compose, containerd, and runc. OpenTAKServer is shipped as an OpenWrt `procd` service with its Compose deployment under `/opt/opentakserver`.
+
+OpenTAKServer application images are pulled as ARM64 containers on first start. Internet access is therefore required on the first service start unless an offline image bundle is placed at `/mnt/opentakserver/offline-images.tar.zst` before enabling the service. The root filesystem allocation in the Pi 5 profile is 4 GB to leave room for those container layers.
 
 ## First boot
 

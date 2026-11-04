@@ -1,0 +1,14 @@
+--- a/lib/gl_oset.h
++++ b/lib/gl_oset.h
+@@ -20,4 +20,11 @@
+ #include <stddef.h>
+
++/* GCC 15 may expose C23 attributes even when this C source is compiled in
++   GNU17 mode.  Keep the attribute in the GNU form accepted by all host
++   compiler modes used by OpenWrt. */
++#ifdef _GL_ATTRIBUTE_NODISCARD
++# undef _GL_ATTRIBUTE_NODISCARD
++# define _GL_ATTRIBUTE_NODISCARD __attribute__ ((__warn_unused_result__))
++#endif
+ 
+ #ifndef _GL_INLINE_HEADER_BEGIN

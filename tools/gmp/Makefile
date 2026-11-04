@@ -17,6 +17,7 @@ PKG_CPE_ID:=cpe:/a:gmplib:gmp
 HOST_FIXUP:=autoreconf
 
 HOST_BUILD_PARALLEL:=1
+HOST_CFLAGS += -std=gnu17
 
 include $(INCLUDE_DIR)/host-build.mk
 

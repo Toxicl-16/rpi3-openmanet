@@ -1,0 +1,7 @@
+--- a/src/extern.h
++++ b/src/extern.h
+@@ -99,3 +99,3 @@
+ extern char output_is_seekable;
+-extern int (*xstat) ();
++extern int (*xstat) (const char *, struct stat *);
+ extern void (*copy_function) ();
