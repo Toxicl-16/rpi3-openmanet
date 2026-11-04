@@ -90,7 +90,7 @@ are not selected in this profile.
 ## Building
 
 The current release work and source-level validation matrix are recorded in
-[the Pi 5 0.5.6 release notes](docs/rpi5-release-v0.5.6.md). The complete
+[the Pi 5 0.5.7 release notes](docs/rpi5-release-v0.5.7.md). The complete
 issue record that drove these fixes is [the Pi 5 firmware fixes document](docs/rpi5_firmware_fixes.md).
 
 The `v0.4.0-alpha` images were built on a Google Compute Engine VM running Ubuntu 22.04.5 LTS (`x86_64`), with 96 vCPUs, approximately 94 GiB of usable RAM, and a 500 GiB Extreme persistent disk for fast read/write operations during compilation. These are the tested build host specifications, not minimum requirements. `make -j$(nproc)` uses every available vCPU; reduce parallelism on machines with less RAM.

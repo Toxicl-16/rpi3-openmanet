@@ -104,34 +104,6 @@ else
 	result WARN 'default-route' 'no default route configured'
 fi
 
-if [ -d /opt/docker ] && [ -w /opt/docker ]; then
-	result PASS 'docker-storage' '/opt/docker is writable'
-	if command -v setcap >/dev/null 2>&1 && command -v getcap >/dev/null 2>&1; then
-		captest=/opt/docker/.openmanet-cap-test
-		if cp /bin/busybox "$captest" 2>/dev/null && setcap cap_net_raw+ep "$captest" 2>/dev/null && getcap "$captest" 2>/dev/null | grep -q cap_net_raw; then
-			result PASS 'docker-file-capabilities' 'security.capability xattr works'
-		else
-			result FAIL 'docker-file-capabilities' 'security.capability xattr is unavailable'
-		fi
-		rm -f "$captest"
-	else
-		result WARN 'docker-file-capabilities' 'setcap/getcap not installed'
-	fi
-else
-	result FAIL 'docker-storage' '/opt/docker is not writable'
-fi
-
-if command -v docker >/dev/null 2>&1; then
-	run 'docker-daemon' docker info
-	if [ -f /opt/opentakserver/compose.yaml ] && docker compose -f /opt/opentakserver/compose.yaml ps >/dev/null 2>&1; then
-		result PASS 'opentakserver-compose' 'compose project is readable'
-	else
-		result WARN 'opentakserver-compose' 'project is not ready or has not pulled images'
-	fi
-else
-	result WARN 'docker-daemon' 'docker command is not installed'
-fi
-
 printf 'SUMMARY PASS=%s WARN=%s FAIL=%s\n' "$pass" "$warn" "$fail" >> "$OUT"
 logger -t openmanet-health "$(tail -n 1 "$OUT")" 2>/dev/null || true
 cat "$OUT"

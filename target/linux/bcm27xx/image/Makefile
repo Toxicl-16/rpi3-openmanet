@@ -293,9 +293,6 @@ define Device/rpi-5
 	raspberrypi,5-compute-module \
 	raspberrypi,5-model-b
   DEVICE_PACKAGES := \
-	cypress-firmware-43455-sdio \
-	brcmfmac-nvram-43455-sdio \
-	kmod-brcmfmac wpad-basic-mbedtls \
 	kmod-i2c-bcm2835 kmod-spi-bcm2835 \
 	kmod-i2c-brcmstb \
 	kmod-i2c-designware-platform kmod-spi-dw-mmio \
