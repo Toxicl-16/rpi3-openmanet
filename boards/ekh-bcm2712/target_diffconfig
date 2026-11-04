@@ -104,6 +104,9 @@ CONFIG_PACKAGE_luci-theme-morseargon=y
 # --- OpenMANET configuration theme ---
 # Keep the Morse LuCI applications and use OpenMANET Argon as the default UI.
 CONFIG_PACKAGE_luci-theme-openmanetargon=y
+# The Morse theme defaults run later and would override OpenMANET Argon.
+# CONFIG_PACKAGE_luci-theme-morse is not set
+# CONFIG_PACKAGE_luci-theme-morseargon is not set
 
 # --- USB serial (LoRa / MCU sidecar boards) ---
 CONFIG_PACKAGE_kmod-usb-acm=y
