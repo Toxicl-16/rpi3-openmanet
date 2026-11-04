@@ -4,6 +4,10 @@ This release starts from the v0.5.2 Pi 5 profile that provided the working
 onboard BCM43455 Wi-Fi AP, then adds BATMAN-V `bat0`, OpenMANETD, OpenTAKServer,
 and first-boot expansion of the writable SD-card space.
 
+The BATMAN packages remain pinned to the v0.5.2 routing-feed generation
+(`batman-adv`/`batctl` 2023.1); the image does not take the newer OpenMANET-feed
+copies.
+
 ## Included
 
 - Build with Parallel Morse Micro MM8108/MM6108 driver and firmware packages.
@@ -28,6 +32,10 @@ PiAware and dump1090 are not included.
 - Image inspection — pass: BCM43455 firmware/NVRAM and brcmfmac modules,
   MM8108 firmware, BATMAN/OpenTAKServer packages, and no PiAware package.
 - No ext4 release artifact was produced.
+- QEMU kernel sanity check — pass through Linux startup and Raspberry Pi 5
+  device-tree identification. QEMU 10.2 has no Pi 5 machine model, so it did
+  not reach OpenWrt userspace or emulate SDIO, Ethernet, MM8108, Docker, or
+  mesh traffic.
 
 The Intel build host cannot verify physical Pi 5 SDIO attachment, AP beaconing,
 Ethernet negotiation, MM8108 USB enumeration, real SD-card expansion, Docker
