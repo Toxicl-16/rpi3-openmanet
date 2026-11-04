@@ -24,6 +24,9 @@ CONFIG_TARGET_PREINIT_BROADCAST="10.41.254.255"
 # OpenTAKServer container storage. 4 GB leaves room for ARM64 TAK layers.
 CONFIG_TARGET_KERNEL_PARTSIZE=64
 CONFIG_TARGET_ROOTFS_PARTSIZE=4096
+# Ship the OpenMANET SquashFS/F2FS layout only. The ext4 alternative is not
+# part of the supported Pi 5 image or release artifacts.
+# CONFIG_TARGET_ROOTFS_EXT4FS is not set
 
 # Pi 5 package maintenance and first-boot storage migration. The native
 # bcm2712 target feed does not exist in OpenWrt 23.05, so packages use the

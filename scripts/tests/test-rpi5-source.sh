@@ -16,6 +16,7 @@ assert_contains() {
 
 assert_contains "$board" 'CONFIG_PACKAGE_openmanet-node-fixes=y'
 assert_contains "$board" 'CONFIG_PACKAGE_opentakserver=y'
+assert_contains "$board" '# CONFIG_TARGET_ROOTFS_EXT4FS is not set'
 if grep -F 'CONFIG_TARGET_DEFAULT_LAN_IP_FROM_PREINIT=y' "$board" >/dev/null; then
 	echo 'FAIL: Pi 5 must not generate a duplicate late LAN-IP board script' >&2
 	exit 1

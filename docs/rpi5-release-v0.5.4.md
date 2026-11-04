@@ -28,7 +28,8 @@ deployment; its web UI/API ports are 8090/8091 and its CoT ports are 8088/8089.
 - `make defconfig V=s` — pass; the Pi 5 board profile no longer selects the
   duplicate preinit LAN generator.
 - Full `make -j16 V=sc` image build — pass; no fatal make or missing-target
-  errors were found in the build log.
+  errors were found in the build log. The Pi 5 profile emits only SquashFS
+  factory/sysupgrade images.
 - Factory and sysupgrade gzip artifacts — pass; sysupgrade metadata was
   extracted on disposable copies and identifies the three supported Pi 5
   boards.
@@ -51,11 +52,8 @@ SquashFS sysupgrade image is for an existing compatible OpenWrt installation.
 
 | Artifact | SHA-256 |
 |---|---|
-| `openwrt-bcm27xx-bcm2712-rpi-5-squashfs-factory.img.gz` | `507c5b2217bd2b8f68e52dd14d803359158653923ea161673f43ff1f8fe68801` |
-| `openwrt-bcm27xx-bcm2712-rpi-5-squashfs-sysupgrade.img.gz` | `bc83126f54b352bb46136d01453e9d3380aa380ea8dbd3bb279111249b23eb1d` |
-| `openwrt-bcm27xx-bcm2712-rpi-5-ext4-factory.img.gz` | `8da460c0f6acb057b070fbe97cab389808205382ed0741a27362579beb987a3f` |
-| `openwrt-bcm27xx-bcm2712-rpi-5-ext4-sysupgrade.img.gz` | `6b147a43a52baaed2cbf6e290aa204a83d9fb592f869d34894f9404f7cb632de` |
-
+| `openwrt-bcm27xx-bcm2712-rpi-5-squashfs-factory.img.gz` | `95a45aebaf4f51f24eb6d47cae235966ce46b6a8a0e438656d2a63c4a21623a0` |
+| `openwrt-bcm27xx-bcm2712-rpi-5-squashfs-sysupgrade.img.gz` | `207d988af960476e93f15105bb610545edf8d7d11716e88d028bddf410a0852f` |
 ## First boot
 
 Connect a computer directly to the Pi 5 Ethernet jack and obtain an address by
